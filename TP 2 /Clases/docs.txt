@@ -3,3 +3,6 @@ Archivo de Clases y objetos / atributos y funciones
 
 Diagrama casos de uso
   - https://miro.com/app/board/uXjVKRwvzbA=/
+
+Diagrama de flujo de datos
+  - https://miro.com/app/board/uXjVKWmjy7U=/
