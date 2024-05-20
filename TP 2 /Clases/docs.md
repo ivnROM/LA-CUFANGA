@@ -6,3 +6,6 @@ Diagrama casos de uso
 
 Diagrama de flujo de datos
   - https://miro.com/app/board/uXjVKWmjy7U=/
+
+Machetini
+https://docs.google.com/presentation/d/1L7JfVnhvjh2Et544nV11qvtWCYImY2D5M9oL0lbxhH8/edit?usp=sharing
