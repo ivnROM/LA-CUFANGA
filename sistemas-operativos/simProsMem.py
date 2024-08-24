@@ -5,8 +5,8 @@ import random
 class Simulador(ttk.Toplevel):
     def __init__(self, capacidad_memoria, num_procesos, metodo_asignacion, historial):
         super().__init__()
-        self.style = ttk.Style()  # Crear el estilo primero
-        self.style.theme_use("darkly")  # Aplicar el tema
+        self.style2 = ttk.Style()  # Crear el estilo primero
+        self.style2.theme_use("darkly")  # Aplicar el tema
         
         self.title(f"Simulador - {metodo_asignacion.capitalize()}")
         self.geometry("900x500")
