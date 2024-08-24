@@ -2,16 +2,20 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 import random
 
-class Simulador(ttk.Window):
-    def __init__(self, capacidad_memoria, num_procesos):
-        super().__init__(themename="darkly")
-        self.title("Simulador de Gestión de Procesos y Memoria")
+class Simulador(ttk.Toplevel):
+    def __init__(self, capacidad_memoria, num_procesos, metodo_asignacion, historial):
+        super().__init__()
+        self.style = ttk.Style()  # Crear el estilo primero
+        self.style.theme_use("darkly")  # Aplicar el tema
+        
+        self.title(f"Simulador - {metodo_asignacion.capitalize()}")
         self.geometry("900x500")
+        self.historial_global = historial
+        self.metodo_asignacion = metodo_asignacion
 
         # Variables de memoria y procesos
         self.memoria_usada = ttk.IntVar(value=0)
         self.procesos = []
-        self.historial_procesos = []
         self.capacidad_memoria = capacidad_memoria
         self.num_procesos = num_procesos
         self.proceso_actual = 0
@@ -56,11 +60,11 @@ class Simulador(ttk.Window):
 
         # Tabla de historial de procesos
         self.tree_historial = ttk.Treeview(
-            frame_historial, columns=("Proceso", "Duración (s)"), show="headings", bootstyle="secondary"
+            frame_historial, columns=("Algoritmo", "Duración (s)"), show="headings", bootstyle="secondary"
         )
-        self.tree_historial.heading("Proceso", text="Proceso")
+        self.tree_historial.heading("Algoritmo", text="Algoritmo")
         self.tree_historial.heading("Duración (s)", text="Duración (s)")
-        self.tree_historial.column("Proceso", anchor=CENTER, width=200)
+        self.tree_historial.column("Algoritmo", anchor=CENTER, width=200)
         self.tree_historial.column("Duración (s)", anchor=CENTER, width=150)
         self.tree_historial.pack(fill=BOTH, expand=TRUE, padx=10, pady=10)
 
@@ -74,7 +78,6 @@ class Simulador(ttk.Window):
         self.memoria_proceso_actual.config(text=f"Memoria Proceso Actual: {porcentaje_usado:.2f}%")
         self.progressbar['value'] = porcentaje_usado
         self.progressbar['maximum'] = 100
-        print(f"Actualizando barra de progreso: {porcentaje_usado:.2f}% usado")
 
     def actualizar_procesos(self):
         """Actualiza la lista de procesos activos."""
@@ -95,10 +98,10 @@ class Simulador(ttk.Window):
         else:
             self.memoria_proceso_actual.config(text="Memoria Proceso Actual: 0%")
 
-    def actualizar_historial(self, nombre_proceso, duracion):
-        """Añade un proceso terminado al historial."""
-        self.historial_procesos.append((nombre_proceso, duracion))
-        self.tree_historial.insert("", "end", values=(nombre_proceso, f"{duracion:.2f}"))
+    def actualizar_historial(self, metodo_asignacion, duracion):
+        """Añade el algoritmo usado y la duración al historial."""
+        self.historial_global.append((metodo_asignacion, duracion))
+        self.tree_historial.insert("", "end", values=(metodo_asignacion, f"{duracion:.2f}"))
 
     def iniciar_simulacion(self):
         if self.proceso_actual < self.num_procesos:
@@ -139,25 +142,69 @@ class Simulador(ttk.Window):
         estado = "Terminado"
         self.procesos = [(n, m, estado) if n == nombre_proceso else (n, m, e) for n, m, e in self.procesos]
         
-        # Actualizar la memoria usada
+        # Liberar la memoria usada por el proceso
         nueva_memoria_usada = max(0, self.memoria_usada.get() - memoria_necesaria)
         self.memoria_usada.set(nueva_memoria_usada)
-        
-        # Verificar el valor actualizado
-        print(f"Memoria usada después de terminar el proceso: {self.memoria_usada.get()}")
         
         self.actualizar_procesos()
         self.actualizar_memoria()
 
         # Actualizar historial de procesos
-        self.actualizar_historial(nombre_proceso, duracion)
+        self.actualizar_historial(self.metodo_asignacion, duracion)
 
         # Avanzar al siguiente proceso
         self.proceso_actual += 1
         self.after(100, self.iniciar_simulacion)
 
+
+class MenuPrincipal(ttk.Window):
+    def __init__(self):
+        super().__init__(themename="darkly")
+        self.title("Menú Principal")
+        self.geometry("400x300")
+        self.historial = []
+
+        # Botón para iniciar la simulación con First-Fit
+        btn_first_fit = ttk.Button(self, text="First-Fit", bootstyle="primary", command=lambda: self.abrir_simulador("first_fit"))
+        btn_first_fit.pack(pady=10)
+
+        # Botón para iniciar la simulación con Best-Fit
+        btn_best_fit = ttk.Button(self, text="Best-Fit", bootstyle="success", command=lambda: self.abrir_simulador("best_fit"))
+        btn_best_fit.pack(pady=10)
+
+        # Botón para iniciar la simulación con Worst-Fit
+        btn_worst_fit = ttk.Button(self, text="Worst-Fit", bootstyle="danger", command=lambda: self.abrir_simulador("worst_fit"))
+        btn_worst_fit.pack(pady=10)
+
+        # Botón para ver el historial de simulaciones
+        btn_historial = ttk.Button(self, text="Ver Historial", bootstyle="info", command=self.ver_historial)
+        btn_historial.pack(pady=10)
+
+    def abrir_simulador(self, metodo_asignacion):
+        """Abre una nueva ventana para ejecutar la simulación."""
+        capacidad_memoria = 100  # Memoria principal de 100MB
+        num_procesos = 10  # Número de procesos a simular
+        Simulador(capacidad_memoria, num_procesos, metodo_asignacion, self.historial)
+
+    def ver_historial(self):
+        """Abre una ventana para mostrar el historial de simulaciones."""
+        ventana_historial = ttk.Toplevel()
+        ventana_historial.title("Historial de Simulaciones")
+        ventana_historial.geometry("500x300")
+
+        tree_historial = ttk.Treeview(
+            ventana_historial, columns=("Algoritmo", "Duración (s)"), show="headings", bootstyle="secondary"
+        )
+        tree_historial.heading("Algoritmo", text="Algoritmo")
+        tree_historial.heading("Duración (s)", text="Duración (s)")
+        tree_historial.column("Algoritmo", anchor=CENTER, width=200)
+        tree_historial.column("Duración (s)", anchor=CENTER, width=150)
+        tree_historial.pack(fill=BOTH, expand=TRUE, padx=10, pady=10)
+
+        # Agregar los datos del historial a la tabla
+        for algoritmo, duracion in self.historial:
+            tree_historial.insert("", "end", values=(algoritmo, f"{duracion:.2f}"))
+
 if __name__ == "__main__":
-    capacidad_memoria = 100  # Memoria principal de 100MB
-    num_procesos = 10  # Número de procesos a simular
-    app = Simulador(capacidad_memoria, num_procesos)
+    app = MenuPrincipal()
     app.mainloop()
