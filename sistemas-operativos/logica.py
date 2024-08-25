@@ -2,10 +2,55 @@ import random
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+class BloqueMemoria:
+    def __init__(self, tamaño):
+        self.tamaño = tamaño
+        self.libre = True
+
+class Proceso:
+    def __init__(self, pid, tamaño):
+        self.pid = pid
+        self.tamaño = tamaño
+        self.bloque_asignado = None
+
+class AsignadorMemoria:
+    def __init__(self, bloques):
+        self.bloques = [BloqueMemoria(tamaño) for tamaño in bloques]
+
+    def first_fit(self, proceso):
+        for bloque in self.bloques:
+            if bloque.libre and bloque.tamaño >= proceso.tamaño:
+                bloque.libre = False
+                proceso.bloque_asignado = bloque
+                return True
+        return False
+
+    def best_fit(self, proceso):
+        mejor_bloque = None
+        for bloque in self.bloques:
+            if bloque.libre and bloque.tamaño >= proceso.tamaño:
+                if mejor_bloque is None or bloque.tamaño < mejor_bloque.tamaño:
+                    mejor_bloque = bloque
+        if mejor_bloque:
+            mejor_bloque.libre = False
+            proceso.bloque_asignado = mejor_bloque
+            return True
+        return False
+
+    def worst_fit(self, proceso):
+        peor_bloque = None
+        for bloque in self.bloques:
+            if bloque.libre and bloque.tamaño >= proceso.tamaño:
+                if peor_bloque is None or bloque.tamaño > peor_bloque.tamaño:
+                    peor_bloque = bloque
+        if peor_bloque:
+            peor_bloque.libre = False
+            proceso.bloque_asignado = peor_bloque
+            return True
+        return False
+
 class Simulador(ttk.Toplevel):
-    # en este constructor se arma todo el quilombo
     def __init__(self, capacidad_memoria, num_procesos, metodo_asignacion, historial):
-        # setup de la interfaz básica
         super().__init__()
         self.style2 = ttk.Style()  
         self.style2.theme_use("darkly")  
@@ -21,6 +66,10 @@ class Simulador(ttk.Toplevel):
         self.capacidad_memoria = capacidad_memoria
         self.num_procesos = num_procesos
         self.proceso_actual = 0
+
+        # configuración inicial de bloques de memoria
+        self.bloques_memoria = [20, 30, 50, 100]  # Puedes cambiar los tamaños de bloques según tus necesidades
+        self.asignador = AsignadorMemoria(self.bloques_memoria)
 
         # frame principal para la lista de procesos
         frame_principal = ttk.Frame(self)
@@ -72,7 +121,6 @@ class Simulador(ttk.Toplevel):
 
         self.after(100, self.iniciar_simulacion)
 
-    # esto actualiza la etiqueta de porcentaje de memoria usada y la barra de progreso.
     def actualizar_memoria(self):
         memoria_actual = self.memoria_usada.get()
         porcentaje_usado = (memoria_actual / self.capacidad_memoria) * 100
@@ -80,7 +128,6 @@ class Simulador(ttk.Toplevel):
         self.progressbar['value'] = porcentaje_usado
         self.progressbar['maximum'] = 100
 
-    # actualiza la lista de procesos activos.
     def actualizar_procesos(self):
         for i in self.tree_procesos.get_children():
             self.tree_procesos.delete(i)
@@ -90,7 +137,6 @@ class Simulador(ttk.Toplevel):
             progreso_texto = f"{porcentaje_memoria:.2f}%"
             self.tree_procesos.insert("", "end", values=(nombre, f"{porcentaje_memoria:.2f}%", estado, progreso_texto))
 
-        # y esto actualiza la memoria del proceso actual en el nuevo widget
         if self.proceso_actual < len(self.procesos):
             proceso_actual = self.procesos[self.proceso_actual]
             nombre, memoria, estado = proceso_actual
@@ -99,18 +145,23 @@ class Simulador(ttk.Toplevel):
         else:
             self.memoria_proceso_actual.config(text="Memoria Proceso Actual: 0%")
 
-    # esto va a añadir el algoritmo usado y la duración al historial
     def actualizar_historial(self, metodo_asignacion, duracion):
         self.historial_global.append((metodo_asignacion, duracion))
         self.tree_historial.insert("", "end", values=(metodo_asignacion, f"{duracion:.2f}"))
 
-    # inicia la simulación, estableciendo el estado del proceso asi como su simulación
     def iniciar_simulacion(self):
         if self.proceso_actual < self.num_procesos:
             nombre_proceso = f"Proceso {self.proceso_actual + 1}"
             memoria_necesaria = random.randint(10, 50)
+            proceso = Proceso(self.proceso_actual + 1, memoria_necesaria)
 
-            if self.memoria_usada.get() + memoria_necesaria <= self.capacidad_memoria:
+            algoritmo_asignacion = {
+                "first_fit": self.asignador.first_fit,
+                "best_fit": self.asignador.best_fit,
+                "worst_fit": self.asignador.worst_fit
+            }
+
+            if algoritmo_asignacion[self.metodo_asignacion](proceso):
                 estado = "Nuevo"
                 self.procesos.append((nombre_proceso, memoria_necesaria, estado))
                 self.memoria_usada.set(self.memoria_usada.get() + memoria_necesaria)
@@ -125,18 +176,14 @@ class Simulador(ttk.Toplevel):
                 self.procesos = [(n, m, estado) if n == nombre_proceso else (n, m, e) for n, m, e in self.procesos]
                 self.actualizar_procesos()
 
-                # simula la duración del proceso
                 duracion = random.uniform(1, 3)
                 self.after(int(duracion * 1000), self.terminar_proceso, nombre_proceso, memoria_necesaria, duracion)
             else:
-                # espera un poco antes de intentar otra vez
                 self.after(100, self.iniciar_simulacion)
         else:
-            # finaliza la simulación
             self.actualizar_memoria()
             self.actualizar_procesos()
 
-    # cambia el estado a terminado y libera la memoria usada por el proceso
     def terminar_proceso(self, nombre_proceso, memoria_necesaria, duracion):
         estado = "Terminado"
         self.procesos = [(n, m, estado) if n == nombre_proceso else (n, m, e) for n, m, e in self.procesos]
