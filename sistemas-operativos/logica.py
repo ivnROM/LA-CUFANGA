@@ -135,6 +135,11 @@ class Simulador(ttk.Toplevel):
             nombre, memoria, estado = proceso
             porcentaje_memoria = (memoria / self.capacidad_memoria) * 100
             progreso_texto = f"{porcentaje_memoria:.2f}%"
+            
+            # Asegurarte de que si el proceso está terminado, el progreso llegue al 100%
+            if estado == "Terminado":
+                progreso_texto = "100.00%"
+                
             self.tree_procesos.insert("", "end", values=(nombre, f"{porcentaje_memoria:.2f}%", estado, progreso_texto))
 
         if self.proceso_actual < len(self.procesos):
@@ -144,6 +149,7 @@ class Simulador(ttk.Toplevel):
             self.memoria_proceso_actual.config(text=f"Memoria Proceso Actual: {porcentaje_memoria:.2f}%")
         else:
             self.memoria_proceso_actual.config(text="Memoria Proceso Actual: 0%")
+
 
     def actualizar_historial(self, metodo_asignacion, duracion):
         self.historial_global.append((metodo_asignacion, duracion))
