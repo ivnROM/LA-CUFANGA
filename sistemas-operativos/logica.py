@@ -68,7 +68,7 @@ class Simulador(ttk.Toplevel):
         self.proceso_actual = 0
 
         # configuración inicial de bloques de memoria
-        self.bloques_memoria = [20, 30, 50, 100]  # Puedes cambiar los tamaños de bloques según tus necesidades
+        self.bloques_memoria = [20, 30, 50, 100]  # Aca para cambiar los tamaños de bloques
         self.asignador = AsignadorMemoria(self.bloques_memoria)
 
         # frame principal para la lista de procesos
