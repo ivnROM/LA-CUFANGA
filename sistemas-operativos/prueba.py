@@ -2,13 +2,13 @@ import tkinter as tk
 from tkinter import ttk, simpledialog
 import random
 import time
-from ttkbootstrap import Style  # Importar ttkbootstrap para el tema darkly
+from ttkbootstrap import Style  
 
 class SimuladorMemoria:
     def __init__(self, root):
         self.root = root
         self.root.title("Simulador de Gestión de Memoria")
-        self.root.geometry("1200x800")  # Ajustar tamaño inicial, se adaptará al tamaño de pantalla
+        self.root.geometry("1200x800")  
         self.limite_memoria = 1000  # Memoria total disponible
         self.memoria_usada = 0
         self.particiones_memoria = [{'tamano': self.limite_memoria, 'libre': True}]  # Inicializar con una partición que cubre todo el espacio
@@ -17,10 +17,9 @@ class SimuladorMemoria:
         self.algoritmo_asignacion = "First-Fit"
         self.simulacion_corriendo = True
 
-        # Aplicar el tema darkly
+        # Tema aca pibe
         self.estilo = Style(theme='darkly')
         
-        # Crear interfaz
         self.crear_interfaz()
 
     def crear_interfaz(self):
@@ -41,12 +40,12 @@ class SimuladorMemoria:
         # Configurar secciones de estado
         self.texto_listos = tk.Text(self.marco_izquierdo, height=20, width=40)
         self.texto_listos.pack(expand=True, fill=tk.BOTH)
-        self.etiqueta_listos = ttk.Label(self.marco_izquierdo, text="Procesos Listos")
+        self.etiqueta_listos = ttk.Label(self.marco_izquierdo, text="Procesos Listos y Ejecutando")
         self.etiqueta_listos.pack()
 
         self.texto_ejecucion = tk.Text(self.marco_central, height=20, width=40)
         self.texto_ejecucion.pack(expand=True, fill=tk.BOTH)
-        self.etiqueta_ejecucion = ttk.Label(self.marco_central, text="Procesos Nuevos y Ejecutando")
+        self.etiqueta_ejecucion = ttk.Label(self.marco_central, text="Procesos Nuevos")
         self.etiqueta_ejecucion.pack()
 
         self.texto_bloqueados = tk.Text(self.marco_derecho, height=20, width=40)
@@ -61,12 +60,19 @@ class SimuladorMemoria:
         self.boton_cambiar_memoria = ttk.Button(self.marco, text="Cambiar Tamaño de Memoria", command=self.cambiar_tamano_memoria)
         self.boton_cambiar_memoria.grid(row=2, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
 
+        
         self.marco_seleccion_algoritmo = ttk.Frame(self.marco, padding="5")
         self.marco_seleccion_algoritmo.grid(row=3, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
+        
+        # Crear un marco que contenga los botones y centrarlo
+        frame_botones = ttk.Frame(self.marco_seleccion_algoritmo)
+        frame_botones.pack(anchor="center")
 
-        ttk.Button(self.marco_seleccion_algoritmo, text="First-Fit", command=lambda: self.seleccionar_algoritmo("First-Fit")).pack(side=tk.LEFT, padx=5)
-        ttk.Button(self.marco_seleccion_algoritmo, text="Best-Fit", command=lambda: self.seleccionar_algoritmo("Best-Fit")).pack(side=tk.LEFT, padx=5)
-        ttk.Button(self.marco_seleccion_algoritmo, text="Worst-Fit", command=lambda: self.seleccionar_algoritmo("Worst-Fit")).pack(side=tk.LEFT, padx=5)
+        # Empaquetar los botones dentro del frame_botones
+        ttk.Button(frame_botones, text="First-Fit", command=lambda: self.seleccionar_algoritmo("First-Fit")).pack(side=tk.LEFT, padx=5)
+        ttk.Button(frame_botones, text="Best-Fit", command=lambda: self.seleccionar_algoritmo("Best-Fit")).pack(side=tk.LEFT, padx=5)
+        ttk.Button(frame_botones, text="Worst-Fit", command=lambda: self.seleccionar_algoritmo("Worst-Fit")).pack(side=tk.LEFT, padx=5)
+
 
         self.boton_liberar_memoria = ttk.Button(self.marco, text="Liberar Memoria", command=self.liberar_memoria)
         self.boton_liberar_memoria.grid(row=4, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
@@ -125,21 +131,21 @@ class SimuladorMemoria:
 
     def ejecutar_simulacion(self):
         while self.simulacion_corriendo:
-            for _ in range(10):  # Simular 10 procesos
+            for _ in range(10):  
                 tamano_proceso = random.randint(50, 200)
                 id_proceso = self.id_proceso
                 self.actualizar_secciones_estado("Nuevo", f"Proceso {id_proceso}: Tamaño={tamano_proceso}, Estado=Nuevo\n")
-                self.root.update()
-                time.sleep(1)  # Espera para mostrar el proceso como "Nuevo"
+                self.root.update()      
+                time.sleep(1)  # Espera entre procesos (nuevos)
                 
                 estado_proceso = self.asignar_memoria(tamano_proceso)
-                self.actualizar_secciones_estado(estado_proceso, f"Proceso {id_proceso}: Tamaño={tamano_proceso}, Estado={estado_proceso}\n")
+                self.actualizar_secciones_estado(estado_proceso, f"Proceso {id_proceso}: Tamaño={tamano_proceso}, Estado= Ejecutando\n")
                 self.root.update()
-                time.sleep(2)  # Espera para simular el paso del tiempo mientras se ejecuta
+                time.sleep(1)  # espera del paso de tiempo entre proceso y proceso
 
                 # Marcar proceso como terminado
                 if estado_proceso == "Listo":
-                    self.actualizar_secciones_estado("Terminado", f"Proceso {id_proceso}: Tamaño={tamano_proceso}, Estado=Terminado\n")
+                    self.actualizar_secciones_estado("Terminado", f"Proceso {id_proceso}: Tamaño={tamano_proceso}, Estado=Listo\n")
                     self.procesos.append((id_proceso, tamano_proceso))
                     self.root.update()
                     time.sleep(1)  # Espera para simular el paso del tiempo
@@ -148,7 +154,7 @@ class SimuladorMemoria:
 
             self.liberar_memoria()
             self.root.update()
-            time.sleep(3)  # Espera para simular el tiempo de espera entre liberaciones de memoria
+            time.sleep(2)  # Espera para simular el tiempo de espera entre liberaciones de memoria
 
     def asignar_memoria(self, tamano):
         if self.algoritmo_asignacion == "First-Fit":
@@ -213,7 +219,7 @@ class SimuladorMemoria:
             proceso = self.procesos.pop(0)
             tamano = proceso[1]
             self.memoria_usada -= tamano
-            # Encontrar la partición y liberarla
+            # Aca busca la partición libre
             for particion in self.particiones_memoria:
                 if particion['tamano'] == tamano and not particion['libre']:
                     particion['libre'] = True
@@ -233,7 +239,7 @@ class SimuladorMemoria:
         elif estado == "Bloqueado":
             self.texto_bloqueados.insert(tk.END, mensaje)
         elif estado == "Terminado":
-            self.texto_listos.insert(tk.END, mensaje)  # Los procesos terminados se añaden a la lista de Listos
+            self.texto_listos.insert(tk.END, mensaje)  # Aca se añade a la lista de procesos terminados
 
 if __name__ == "__main__":
     root = tk.Tk()
