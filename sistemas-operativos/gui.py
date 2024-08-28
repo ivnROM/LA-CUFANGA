@@ -29,7 +29,7 @@ class MenuPrincipal(ttk.Window):
     # abre una nueva ventana para ejecutar la simulación.
     def abrir_simulador(self, metodo_asignacion):
         capacidad_memoria = 100  # Memoria principal de 100MB
-        num_procesos = 7  # Número de procesos a simular
+        num_procesos = 4  # Número de procesos a simular
         Simulador(capacidad_memoria, num_procesos, metodo_asignacion, self.historial)
 
     # abre una ventana para mostrar el historial de simulaciones.
