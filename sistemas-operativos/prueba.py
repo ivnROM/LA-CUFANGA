@@ -9,8 +9,7 @@ class MemorySimulator:
         self.root = root
         self.root.title("Simulador de Gestión de Memoria")
         self.root.geometry("1200x800")  # Ajustar tamaño inicial, se adaptará al tamaño de pantalla
-        self.memory_limit = 1000  # Memoria total disponible
-        self.memory_used = 0
+        self.memory_limit = 1000  # Memoria total disponible self.memory_used = 0
         self.processes = []
         self.process_id = 1
         self.allocation_algorithm = "First-Fit"
@@ -61,11 +60,23 @@ class MemorySimulator:
         self.set_memory_button.grid(row=2, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
 
         self.select_algorithm_frame = ttk.Frame(self.frame, padding="5")
-        self.select_algorithm_frame.grid(row=3, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
+        self.select_algorithm_frame.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
+        self.select_algorithm_frame.columnconfigure(4, weight=1)
 
-        ttk.Button(self.select_algorithm_frame, text="First-Fit", command=lambda: self.select_algorithm("First-Fit")).pack(side=tk.LEFT, padx=5)
-        ttk.Button(self.select_algorithm_frame, text="Best-Fit", command=lambda: self.select_algorithm("Best-Fit")).pack(side=tk.LEFT, padx=5)
-        ttk.Button(self.select_algorithm_frame, text="Worst-Fit", command=lambda: self.select_algorithm("Worst-Fit")).pack(side=tk.LEFT, padx=5)
+        # Botón First-Fit
+        self.set_first_fit = ttk.Button(self.select_algorithm_frame, text="First-Fit", command=lambda: self.select_algorithm("First-Fit"))
+        self.set_first_fit.grid(row=0, column=0, padx=5, pady=0, sticky="ew")
+
+        # Botón Best-Fit
+        self.set_best_fit = ttk.Button(self.select_algorithm_frame, text="Best-Fit", command=lambda: self.select_algorithm("Best-Fit"))
+        self.set_best_fit.grid(row=0, column=1, padx=5, pady=0, sticky="ew")
+
+        # Botón Worst-Fit
+        self.set_worst_fit = ttk.Button(self.select_algorithm_frame, text="Worst-Fit", command=lambda: self.select_algorithm("Worst-Fit"))
+        self.set_worst_fit.grid(row=0, column=2, padx=5, pady=0, sticky="ew")
+
+        self.free_memory_button = ttk.Button(self.frame, text="Liberar Memoria", command=self.free_memory)
+        self.free_memory_button.grid(row=4, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
 
         self.free_memory_button = ttk.Button(self.frame, text="Liberar Memoria", command=self.free_memory)
         self.free_memory_button.grid(row=4, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
