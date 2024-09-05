@@ -3,12 +3,16 @@ from ttkbootstrap.constants import *
 from logica import *
 
 class MenuPrincipal(ttk.Window):
-    # aca esta la interfaz gráfica linda, en el otro modulo esta lo feo
     def __init__(self):
         super().__init__(themename="darkly")
         self.title("Menú Principal")
         self.geometry("400x300")
         self.historial = []
+
+        # Campo de entrada para el número de procesos
+        self.num_procesos_entry = ttk.Entry(self)
+        self.num_procesos_entry.insert(0, "4")  # Valor predeterminado
+        self.num_procesos_entry.pack(pady=10)
 
         # botón para iniciar la simulación con First-Fit
         btn_first_fit = ttk.Button(self, text="First-Fit", bootstyle="primary", command=lambda: self.abrir_simulador("first_fit"))
@@ -26,27 +30,11 @@ class MenuPrincipal(ttk.Window):
         btn_historial = ttk.Button(self, text="Ver Historial", bootstyle="info", command=self.ver_historial)
         btn_historial.pack(pady=10)
 
-    # abre una nueva ventana para ejecutar la simulación.
     def abrir_simulador(self, metodo_asignacion):
         capacidad_memoria = 100  # Memoria principal de 100MB
-        num_procesos = 4  # Número de procesos a simular
+        try:
+            num_procesos = int(self.num_procesos_entry.get())
+        except ValueError:
+            num_procesos = 10  # Valor por defecto en caso de error
+
         Simulador(capacidad_memoria, num_procesos, metodo_asignacion, self.historial)
-
-    # abre una ventana para mostrar el historial de simulaciones.
-    def ver_historial(self):
-        ventana_historial = ttk.Toplevel()
-        ventana_historial.title("Historial de Simulaciones")
-        ventana_historial.geometry("500x300")
-
-        tree_historial = ttk.Treeview(
-            ventana_historial, columns=("Algoritmo", "Duración (s)"), show="headings", bootstyle="secondary"
-        )
-        tree_historial.heading("Algoritmo", text="Algoritmo")
-        tree_historial.heading("Duración (s)", text="Duración (s)")
-        tree_historial.column("Algoritmo", anchor=CENTER, width=200)
-        tree_historial.column("Duración (s)", anchor=CENTER, width=150)
-        tree_historial.pack(fill=BOTH, expand=TRUE, padx=10, pady=10)
-
-        for algoritmo, duracion in self.historial:
-            tree_historial.insert("", "end", values=(algoritmo, f"{duracion:.2f}"))
-

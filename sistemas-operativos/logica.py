@@ -139,11 +139,8 @@ class Simulador(ttk.Toplevel):
         for proceso in self.procesos:
             nombre, memoria, estado = proceso
             porcentaje_memoria = (memoria / self.capacidad_memoria) * 100
-            progreso_texto = f"{porcentaje_memoria:.2f}%"
-
-            if estado == "Terminado":
-                progreso_texto = "100.00%"
-
+            progreso_texto = "100.00%" if estado == "Terminado" else "0.00%" if estado == "Nuevo" else f"{porcentaje_memoria:.2f}%"
+            
             self.tree_procesos.insert("", "end", values=(nombre, f"{porcentaje_memoria:.2f}%", estado, progreso_texto))
 
         if self.proceso_actual < len(self.procesos):
@@ -153,6 +150,7 @@ class Simulador(ttk.Toplevel):
             self.memoria_proceso_actual.config(text=f"Memoria Proceso Actual: {porcentaje_memoria:.2f}%")
         else:
             self.memoria_proceso_actual.config(text="Memoria Proceso Actual: 0%")
+
 
     def actualizar_pendientes(self):
         for i in self.tree_pendientes.get_children():
@@ -167,15 +165,14 @@ class Simulador(ttk.Toplevel):
 
     def iniciar_simulacion(self):
         self.procesos = [
-            ("Proceso 1", random.randint(10, 100), "Nuevo"),
-            ("Proceso 2", random.randint(10, 100), "Nuevo"),
-            ("Proceso 3", random.randint(10, 100), "Nuevo"),
-            ("Proceso 4", random.randint(10, 100), "Nuevo"),
-            ("Proceso 5", random.randint(10, 100), "Nuevo"),
+            (f"Proceso {i + 1}", random.randint(10, 100), "Nuevo")
+            for i in range(self.num_procesos)
         ]
         self.procesos_pendientes = self.procesos.copy()
         self.proceso_actual = 0
+        self.memoria_usada.set(0)  # Reiniciar la memoria usada
         self.actualizar_pendientes()
+        self.actualizar_procesos()
         self.ejecutar_procesos()
 
     def ejecutar_procesos(self):
@@ -183,9 +180,6 @@ class Simulador(ttk.Toplevel):
             if self.proceso_actual < len(self.procesos):
                 proceso = self.procesos[self.proceso_actual]
                 nombre, memoria, estado = proceso
-
-                if self.procesos_pendientes and estado == "En Ejecución":
-                    self.procesos_pendientes.pop(0)
 
                 if estado == "Nuevo":
                     proceso_obj = Proceso(nombre, memoria)
@@ -196,12 +190,12 @@ class Simulador(ttk.Toplevel):
                         self.memoria_usada.set(self.memoria_usada.get() + proceso_obj.tamaño)
                         self.actualizar_memoria()
                         self.actualizar_procesos()
-
                         self.after(1000, self.terminar_proceso)
                     else:
-                        self.procesos[self.proceso_actual] = (nombre, memoria, "Esperando")
+                        self.procesos[self.proceso_actual] = (nombre, memoria, "Bloqueado")
                         self.procesos_pendientes.append(proceso)
                         self.actualizar_pendientes()
+                        self.proceso_actual += 1
                         self.after(1000, self.ejecutar_procesos)
                 else:
                     self.proceso_actual += 1
@@ -228,4 +222,3 @@ class Simulador(ttk.Toplevel):
 
         self.proceso_actual += 1
         self.after(1000, self.ejecutar_procesos)
-

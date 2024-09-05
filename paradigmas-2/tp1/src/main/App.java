@@ -2,6 +2,7 @@ package main;
 
 public class App {
     public static void main(String[] args) {
-        System.out.println("TEST");
-    }
-}
+        Sistema sistema = new Sistema();
+        sistema.inicializarSistema();
+        sistema.mostrarMenu();
+    }}
