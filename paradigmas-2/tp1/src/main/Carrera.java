@@ -3,7 +3,7 @@ package main;
 import java.util.ArrayList;
 
 public class Carrera {
-    public String nombre;
+    private String nombre;
     private int duracion;
     private Profesor coordinador;
     private double precioInscripcion;
@@ -21,6 +21,7 @@ public class Carrera {
         this.alumnos = new ArrayList<>();
     }
 
+
     public void agregarMateria(Materia materia) {
         materias.add(materia);
     }
@@ -35,6 +36,10 @@ public class Carrera {
 
     public ArrayList<Alumno> getAlumnos() {
         return alumnos;
+    }
+
+    public String getNombre() {
+        return nombre;
     }
 }
 

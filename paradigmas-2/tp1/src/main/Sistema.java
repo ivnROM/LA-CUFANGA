@@ -68,7 +68,7 @@ public class Sistema {
         Alumno alumno = new Alumno(nombre, apellido, dni, legajo);
         System.out.println("Seleccione la Carrera:");
         for (int i = 0; i < carreras.size(); i++) {
-            System.out.println((i + 1) + ". " + carreras.get(i).nombre);
+            System.out.println((i + 1) + ". " + carreras.get(i).getNombre());
         }
         int carreraIndex = scanner.nextInt() - 1;
         scanner.nextLine();
@@ -88,7 +88,7 @@ public class Sistema {
         for (int i = 0; i < carreras.size(); i++) {
             Carrera c_actual = carreras.get(i);
             for (int j = 0; j < c_actual.getAlumnos().size(); j++) {
-                System.out.println("Carrera: " + c_actual.nombre + " - " + c_actual.getAlumnos().get(j).apellido + " " + c_actual.getAlumnos().get(j).apellido);
+                System.out.println("Carrera: " + c_actual.getNombre() + " - " + c_actual.getAlumnos().get(j).apellido + " " + c_actual.getAlumnos().get(j).apellido);
             }
         }
     }
