@@ -6,8 +6,8 @@ public class Alumno extends Persona {
     private int legajo;
     private HashMap<Materia, String> situacionesFinales;
 
-    public Alumno(String nombre, String dni, int legajo) {
-        super(nombre, dni);
+    public Alumno(String nombre, String apellido, String dni, int legajo) {
+        super(nombre, apellido, dni);
         this.legajo = legajo;
         this.situacionesFinales = new HashMap<>();
     }

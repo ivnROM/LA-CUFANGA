@@ -13,14 +13,14 @@ public class Sistema {
     }
 
     public void inicializarSistema() {
-        Profesor coordinador1 = new Profesor("Juan Pérez", "12345678", "Ingeniero en Sistemas");
-        Profesor coordinador2 = new Profesor("María López", "87654321", "Licenciada en Matemáticas");
+        Profesor coordinador1 = new Profesor("Juan", "Pérez", "12345678", "Ingeniero en Sistemas");
+        Profesor coordinador2 = new Profesor("María", "López", "87654321", "Licenciada en Matemáticas");
 
         Carrera carrera1 = new Carrera("Ingeniería en Sistemas", 5, coordinador1, 5000, 2000);
         Carrera carrera2 = new Carrera("Licenciatura en Matemáticas", 4, coordinador2, 4500, 1800);
 
-        Profesor profesor1 = new Profesor("Carlos García", "23456789", "Doctor en Computación");
-        Profesor profesor2 = new Profesor("Ana Torres", "98765432", "Magister en Matemáticas");
+        Profesor profesor1 = new Profesor("Carlos", "García", "23456789", "Doctor en Computación");
+        Profesor profesor2 = new Profesor("Ana", "Torres", "98765432", "Magister en Matemáticas");
 
         Materia materia1 = new Materia("Programación", 1, "1er Cuatrimestre", profesor1);
         Materia materia2 = new Materia("Cálculo", 1, "2do Cuatrimestre", profesor2);
@@ -57,13 +57,15 @@ public class Sistema {
     private void matricularAlumno() {
         System.out.println("Nombre del Alumno:");
         String nombre = scanner.nextLine();
+        System.out.println("Apellido del Alumno:");
+        String apellido = scanner.nextLine();
         System.out.println("DNI del Alumno:");
         String dni = scanner.nextLine();
         System.out.println("Legajo del Alumno:");
         int legajo = scanner.nextInt();
         scanner.nextLine();
 
-        Alumno alumno = new Alumno(nombre, dni, legajo);
+        Alumno alumno = new Alumno(nombre, apellido, dni, legajo);
         System.out.println("Seleccione la Carrera:");
         for (int i = 0; i < carreras.size(); i++) {
             System.out.println((i + 1) + ". " + carreras.get(i).nombre);
@@ -83,7 +85,12 @@ public class Sistema {
     }
 
     private void mostrarAlumnos() {
-        // Lógica para mostrar los alumnos de una carrera y materia específica
+        for (int i = 0; i < carreras.size(); i++) {
+            Carrera c_actual = carreras.get(i);
+            for (int j = 0; j < c_actual.getAlumnos().size(); j++) {
+                System.out.println("Carrera: " + c_actual.nombre + " - " + c_actual.getAlumnos().get(j).apellido + " " + c_actual.getAlumnos().get(j).apellido);
+            }
+        }
     }
 }
 

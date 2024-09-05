@@ -2,10 +2,12 @@ package main;
 
 public abstract class Persona {
     protected String nombre;
-    protected String dni;
+    protected String apellido;
+	protected String dni;
 
-    public Persona(String nombre, String dni) {
+    public Persona(String nombre, String apellido, String dni) {
         this.nombre = nombre;
+        this.apellido = apellido;
         this.dni = dni;
     }
 
@@ -15,6 +17,10 @@ public abstract class Persona {
 
     public String getDni() {
         return dni;
+    }
+
+    public String getApellido() {
+        return apellido;
     }
 }
 
