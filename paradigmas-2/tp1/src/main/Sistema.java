@@ -106,7 +106,7 @@ public class Sistema {
             System.out.println("#! Ingrese 'SALIR' a la consola para salir\nBuscar Alumno:");
             input = scanner.nextLine();
 
-            if (input.equals("SALIR")) {
+            if (input.trim().equals("SALIR")) {
                 return;
             }
 
