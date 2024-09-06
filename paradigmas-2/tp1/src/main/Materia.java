@@ -15,6 +15,7 @@ public class Materia {
         this.curso = curso;
         this.cuatrimestre = cuatrimestre;
         this.profesor = profesor;
+        this.estudiantes_arr = new ArrayList<>();
     }
 
     public String getNombre() {
