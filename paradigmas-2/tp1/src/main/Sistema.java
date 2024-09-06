@@ -102,9 +102,18 @@ public class Sistema {
 
     private void inscribirAlumnoMateria() {
         String input = "";
-        do {
+        while (true) {
             System.out.println("#! Ingrese 'SALIR' a la consola para salir\nBuscar Alumno:");
             input = scanner.nextLine();
+
+            if (input == "SALIR\n" ) {
+                return;
+            }
+
+            if (input == "SALIR" ) {
+                return;
+            }
+
             ArrayList<Alumno> found_arr = new ArrayList<>();
             int idx = 1;
             for (int i = 0; i < matriculados.size(); i++) {
@@ -152,7 +161,7 @@ public class Sistema {
 
             materias_disp.get(prsd_input - 1).inscribirEstudiante(matriculado);
             System.out.println("Inscripción a materia exitosa");
-        } while (input != "SALIR");
+        }
     }
 
     private void cargarSituacionFinal() {
