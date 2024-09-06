@@ -106,11 +106,7 @@ public class Sistema {
             System.out.println("#! Ingrese 'SALIR' a la consola para salir\nBuscar Alumno:");
             input = scanner.nextLine();
 
-            if (input == "SALIR\n" ) {
-                return;
-            }
-
-            if (input == "SALIR" ) {
+            if (input.equals("SALIR")) {
                 return;
             }
 
@@ -127,8 +123,7 @@ public class Sistema {
 
             if (found_arr.size() == 0) {
                 Utilidades.limpiar_pantalla();
-                Utilidades.limpiar_pantalla();
-                System.out.println("Error: No se encontró ningun resultado");
+                System.out.println("No se encontro ningun resultado");
                 continue;
             }
 
@@ -167,7 +162,5 @@ public class Sistema {
     private void cargarSituacionFinal() {
         // Lógica para cargar la situación final del alumno
     }
-
-
 }
 
