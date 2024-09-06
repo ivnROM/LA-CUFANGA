@@ -3,14 +3,17 @@ package main;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
-import java.util.random.RandomGeneratorFactory;
 
 public class Sistema {
     private ArrayList<Carrera> carreras;
+    private ArrayList<Materia> materias;
+    private ArrayList<Alumno> matriculados;
     private Scanner scanner;
 
     public Sistema() {
         carreras = new ArrayList<>();
+        materias = new ArrayList<>();
+        matriculados = new ArrayList<>();
         scanner = new Scanner(System.in);
     }
 
@@ -27,11 +30,14 @@ public class Sistema {
         Materia materia2 = new Materia("Cálculo", 1, "2do Cuatrimestre", profesor2);
 
         carrera1.agregarMateria(materia1);
+        materias.add(materia1);
         carrera2.agregarMateria(materia2);
+        materias.add(materia2);
 
         carreras.add(carrera1);
         carreras.add(carrera2);
     }
+
     public void mostrarMenu() {
         int opcion;
         do {
@@ -73,6 +79,7 @@ public class Sistema {
         int carreraIndex = scanner.nextInt() - 1;
         scanner.nextLine();
         carreras.get(carreraIndex).matricularAlumno(alumno);
+        matriculados.add(alumno);
         System.out.println("Alumno matriculado con éxito.");
     }
 
@@ -85,14 +92,67 @@ public class Sistema {
                 }
             }
             case 2 -> {
-                // IMPLEMENTAR ??
+                for (int i = 0; i < materias.size(); i++) {
+                    materias.get(i).mostrarAlumnos();
+                }
             }
             default -> System.out.println("Error, opción invalida");
         };
     }
 
     private void inscribirAlumnoMateria() {
-        
+        String input = "";
+        do {
+            System.out.println("#! Ingrese 'SALIR' a la consola para salir\nBuscar Alumno:");
+            input = scanner.nextLine();
+            ArrayList<Alumno> found_arr = new ArrayList<>();
+            int idx = 1;
+            for (int i = 0; i < matriculados.size(); i++) {
+                Alumno matriculado = matriculados.get(i);
+                if (matriculado.getNombre().contains(input) || matriculado.getApellido().contains(input)) {
+                    System.out.println(idx + ") " + matriculado.getApellido() + " " + matriculado.getNombre());
+                    found_arr.add(matriculado);
+                    idx++;
+                }
+            }
+
+            if (found_arr.size() == 0) {
+                Utilidades.limpiar_pantalla();
+                Utilidades.limpiar_pantalla();
+                System.out.println("Error: No se encontró ningun resultado");
+                continue;
+            }
+
+            input = scanner.nextLine();
+            int prsd_input = Integer.parseInt(input);
+
+            if (prsd_input <= 0 || prsd_input > found_arr.size()) {
+                Utilidades.limpiar_pantalla();
+                System.out.println("Error: Ingreso de número inválido");
+                continue;
+            }
+
+            Alumno matriculado = found_arr.get(prsd_input - 1);
+            ArrayList<Materia> materias_disp = matriculado.getCarrera_actual().getMaterias();
+            Utilidades.limpiar_pantalla();
+
+            for (int i = 0; i < materias_disp.size();i++) {
+                Materia actual = materias_disp.get(i);
+                System.out.println(i + 1 + ") "+ actual.getNombre());
+            }
+
+            input = scanner.nextLine();
+            prsd_input = Integer.parseInt(input);
+
+            if (prsd_input <= 0 || prsd_input > materias_disp.size()) {
+                Utilidades.limpiar_pantalla();
+                System.out.println("Error: Ingreso de número inválido");
+                continue;
+            }
+
+            materias_disp.get(prsd_input - 1).inscribirEstudiante(matriculado);
+            System.out.println("Inscripción a materia exitosa");
+        } while (input != "SALIR");
     }
 
     private void cargarSituacionFinal() {

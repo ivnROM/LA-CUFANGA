@@ -28,6 +28,7 @@ public class Carrera {
 
     public void matricularAlumno(Alumno alumno) {
         alumnos.add(alumno);
+        alumno.setCarrera_actual(this);
     }
 
     public ArrayList<Materia> getMaterias() {

@@ -41,7 +41,7 @@ public class Materia {
         this.estudiantes_arr.addLast(estudiante);
     }
 
-    public void displayEstudiantes() {
+    public void mostrarAlumnos() {
         for (int i = 0; i < this.estudiantes_arr.size(); i++) {
             Alumno estudiante = this.estudiantes_arr.get(i);
             String linea = String.format("%i) %s %s", i + 1, estudiante.getNombre(), estudiante.getApellido());
