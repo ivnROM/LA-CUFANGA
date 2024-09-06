@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Random;
+import java.util.random.RandomGeneratorFactory;
 
 public class Sistema {
     private ArrayList<Carrera> carreras;
@@ -15,7 +17,6 @@ public class Sistema {
     public void inicializarSistema() {
         Profesor coordinador1 = new Profesor("Juan", "Pérez", "12345678", "Ingeniero en Sistemas");
         Profesor coordinador2 = new Profesor("María", "López", "87654321", "Licenciada en Matemáticas");
-
         Carrera carrera1 = new Carrera("Ingeniería en Sistemas", 5, coordinador1, 5000, 2000);
         Carrera carrera2 = new Carrera("Licenciatura en Matemáticas", 4, coordinador2, 4500, 1800);
 
@@ -31,7 +32,6 @@ public class Sistema {
         carreras.add(carrera1);
         carreras.add(carrera2);
     }
-
     public void mostrarMenu() {
         int opcion;
         do {
@@ -42,7 +42,7 @@ public class Sistema {
             System.out.println("5. Salir");
             opcion = scanner.nextInt();
             scanner.nextLine();
-
+            Utilidades.limpiar_pantalla();
             switch (opcion) {
                 case 1 -> matricularAlumno();
                 case 2 -> inscribirAlumnoMateria();
@@ -61,9 +61,9 @@ public class Sistema {
         String apellido = scanner.nextLine();
         System.out.println("DNI del Alumno:");
         String dni = scanner.nextLine();
-        System.out.println("Legajo del Alumno:");
-        int legajo = scanner.nextInt();
-        scanner.nextLine();
+
+        Random seed = new Random();
+        int legajo = seed.nextInt(1000, 9999);
 
         Alumno alumno = new Alumno(nombre, apellido, dni, legajo);
         System.out.println("Seleccione la Carrera:");
@@ -76,21 +76,29 @@ public class Sistema {
         System.out.println("Alumno matriculado con éxito.");
     }
 
+    private void mostrarAlumnos() {
+        System.out.println("Elija una opcion:\n1) Ver por carrera\n2) Ver por materia");
+        switch (scanner.nextInt()) {
+            case 1 -> {
+                for (int i = 0; i < carreras.size(); i++) {
+                    carreras.get(i).mostrarAlumnos();
+                }
+            }
+            case 2 -> {
+                // IMPLEMENTAR ??
+            }
+            default -> System.out.println("Error, opción invalida");
+        };
+    }
+
     private void inscribirAlumnoMateria() {
-        // Lógica similar para inscribir a una materia
+        
     }
 
     private void cargarSituacionFinal() {
         // Lógica para cargar la situación final del alumno
     }
 
-    private void mostrarAlumnos() {
-        for (int i = 0; i < carreras.size(); i++) {
-            Carrera c_actual = carreras.get(i);
-            for (int j = 0; j < c_actual.getAlumnos().size(); j++) {
-                System.out.println("Carrera: " + c_actual.getNombre() + " - " + c_actual.getAlumnos().get(j).apellido + " " + c_actual.getAlumnos().get(j).apellido);
-            }
-        }
-    }
+
 }
 

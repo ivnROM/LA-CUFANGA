@@ -41,5 +41,14 @@ public class Carrera {
     public String getNombre() {
         return nombre;
     }
+
+    public void mostrarAlumnos() {
+        for (int i = 0; i < this.getAlumnos().size(); i++) {
+            Alumno estudiante = this.getAlumnos().get(i);
+            String line = String.format("Carrera: %s - %s, %s", this.getNombre(), estudiante.getApellido(), estudiante.getNombre() );
+            System.out.println(line);
+        }
+    }
 }
+
 

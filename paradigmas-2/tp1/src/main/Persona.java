@@ -15,12 +15,13 @@ public abstract class Persona {
         return nombre;
     }
 
+    public String getApellido() {
+        return apellido;
+    }
+
     public String getDni() {
         return dni;
     }
 
-    public String getApellido() {
-        return apellido;
-    }
 }
 
