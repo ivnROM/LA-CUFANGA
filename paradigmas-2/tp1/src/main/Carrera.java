@@ -21,7 +21,6 @@ public class Carrera {
         this.alumnos = new ArrayList<>();
     }
 
-
     public void agregarMateria(Materia materia) {
         materias.add(materia);
     }
@@ -44,12 +43,26 @@ public class Carrera {
     }
 
     public void mostrarAlumnos() {
-        for (int i = 0; i < this.getAlumnos().size(); i++) {
-            Alumno estudiante = this.getAlumnos().get(i);
+        for (Alumno estudiante : alumnos) {
             String line = String.format("Carrera: %s - %s, %s", this.getNombre(), estudiante.getApellido(), estudiante.getNombre() );
             System.out.println(line);
         }
     }
+
+
+    public void mostrarAlumnosConEstado() {
+        for (Alumno alumno : alumnos) {
+            System.out.println("Alumno: " + alumno.getNombre() + " " + alumno.getApellido());
+            alumno.getSituacionesFinales().forEach((materia, estado) -> {
+                System.out.println("Materia: " + materia.getNombre() + " - Estado: " + estado);
+            });
+        }
+    }
+
+
+    public void mostrarMateriasConDetalles() {
+        for (Materia materia : materias) {
+            System.out.println("Materia: " + materia.getNombre() + ", Cuatrimestre: " + materia.getCuatrimestre() + ", Profesor: " + materia.getProfesor().getNombre() + " " + materia.getProfesor().getApellido());
+        }
+    }
 }
-
-

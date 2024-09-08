@@ -45,7 +45,9 @@ public class Sistema {
             System.out.println("2. Inscribir Alumno a Materia");
             System.out.println("3. Cargar situación final");
             System.out.println("4. Mostrar Alumnos de Carrera y Materia");
-            System.out.println("5. Salir");
+            System.out.println("5. Registrar asistencia");
+            System.out.println("6. Mostrar Materias de Carrera");
+            System.out.println("7. Salir");
             opcion = scanner.nextInt();
             scanner.nextLine();
             Utilidades.limpiar_pantalla();
@@ -54,10 +56,12 @@ public class Sistema {
                 case 2 -> inscribirAlumnoMateria();
                 case 3 -> cargarSituacionFinal();
                 case 4 -> mostrarAlumnos();
-                case 5 -> System.out.println("Saliendo...");
+                case 5 -> registrarAsistencia();
+                case 6 -> mostrarMateriasDeCarrera();
+                case 7 -> System.out.println("Saliendo...");
                 default -> System.out.println("Opción no válida");
             }
-        } while (opcion != 5);
+        } while (opcion != 7);
     }
 
     private void matricularAlumno() {
@@ -88,12 +92,12 @@ public class Sistema {
         switch (scanner.nextInt()) {
             case 1 -> {
                 for (int i = 0; i < carreras.size(); i++) {
-                    carreras.get(i).mostrarAlumnos();
+                    carreras.get(i).mostrarAlumnosConEstado();
                 }
             }
             case 2 -> {
                 for (int i = 0; i < materias.size(); i++) {
-                    materias.get(i).mostrarAlumnos();
+                    materias.get(i).mostrarAlumnosConEstadoFinal();
                 }
             }
             default -> System.out.println("Error, opción invalida");
@@ -103,10 +107,10 @@ public class Sistema {
     private void inscribirAlumnoMateria() {
         String input = "";
         while (true) {
-            System.out.println("#! Ingrese 'SALIR' a la consola para salir\nBuscar Alumno:");
+            System.out.println("#! Ingrese '0' a la consola para salir\nBuscar Alumno:");
             input = scanner.nextLine();
 
-            if (input.trim().equals("SALIR")) {
+            if (input.trim().equals("0")) {
                 return;
             }
 
@@ -160,7 +164,80 @@ public class Sistema {
     }
 
     private void cargarSituacionFinal() {
-        // Lógica para cargar la situación final del alumno
+        System.out.println("Ingrese el nombre del alumno:");
+        String nombreAlumno = scanner.nextLine();
+
+        Alumno alumno = buscarAlumnoPorNombre(nombreAlumno);
+        if (alumno == null) {
+            System.out.println("Alumno no encontrado.");
+            return;
+        }
+
+        System.out.println("Seleccione la materia:");
+        for (int i = 0; i < alumno.getCarrera_actual().getMaterias().size(); i++) {
+            Materia materia = alumno.getCarrera_actual().getMaterias().get(i);
+            System.out.println((i + 1) + ". " + materia.getNombre());
+        }
+        int materiaIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        Materia materia = alumno.getCarrera_actual().getMaterias().get(materiaIndex);
+
+        System.out.println("Ingrese el estado final (Regular/Libre/Promocionado):");
+        String estado = scanner.nextLine();
+
+        alumno.setEstadoFinal(materia, estado);
+        System.out.println("Situación final registrada con éxito.");
+    }
+
+    private Alumno buscarAlumnoPorNombre(String nombreAlumno) {
+        for (Alumno alumno : matriculados) {
+            if (alumno.getNombre().equalsIgnoreCase(nombreAlumno)) {
+                return alumno;
+            }
+        }
+        return null;
+    }
+
+
+
+    private void registrarAsistencia() {
+        System.out.println("Seleccione la materia:");
+        for (int i = 0; i < materias.size(); i++) {
+            System.out.println((i + 1) + ". " + materias.get(i).getNombre());
+        }
+        int materiaIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        Materia materia = materias.get(materiaIndex);
+
+        System.out.println("Seleccione el alumno:");
+        for (int i = 0; i < materia.getAlumnosInscriptos().size(); i++) {
+            System.out.println((i + 1) + ". " + materia.getAlumnosInscriptos().get(i).getNombre());
+        }
+        int alumnoIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        Alumno alumno = materia.getAlumnosInscriptos().get(alumnoIndex);
+
+        materia.registrarAsistencia(alumno);
+    }
+
+    private void mostrarMateriasDeCarrera() {
+        System.out.println("Seleccione la carrera:");
+        for (int i = 0; i < carreras.size(); i++) {
+            System.out.println((i + 1) + ". " + carreras.get(i).getNombre());
+        }
+        int carreraIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        Carrera carrera = carreras.get(carreraIndex);
+        carrera.mostrarMateriasConDetalles();
     }
 }
 
+enum EstadoCursado {
+    REGULAR,
+    LIBRE,
+    PROMOCIONADO;
+}
