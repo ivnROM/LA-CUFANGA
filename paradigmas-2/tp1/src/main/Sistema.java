@@ -92,12 +92,12 @@ public class Sistema {
         switch (scanner.nextInt()) {
             case 1 -> {
                 for (int i = 0; i < carreras.size(); i++) {
-                    carreras.get(i).mostrarAlumnosConEstado();
+                    carreras.get(i).mostrarAlumnos();
                 }
             }
             case 2 -> {
                 for (int i = 0; i < materias.size(); i++) {
-                    materias.get(i).mostrarAlumnosConEstadoFinal();
+                    materias.get(i).mostrarAlumnos();
                 }
             }
             default -> System.out.println("Error, opción invalida");
@@ -105,7 +105,7 @@ public class Sistema {
     }
 
     private void inscribirAlumnoMateria() {
-        String input = "";
+        String input = new String();
         while (true) {
             System.out.println("#! Ingrese '0' a la consola para salir\nBuscar Alumno:");
             input = scanner.nextLine();
@@ -119,7 +119,7 @@ public class Sistema {
             for (int i = 0; i < matriculados.size(); i++) {
                 Alumno matriculado = matriculados.get(i);
                 if (matriculado.getNombre().contains(input) || matriculado.getApellido().contains(input)) {
-                    System.out.println(idx + ") " + matriculado.getApellido() + " " + matriculado.getNombre());
+                    System.out.println(idx + ") " + matriculado.getApellido() + ", " + matriculado.getNombre());
                     found_arr.add(matriculado);
                     idx++;
                 }
@@ -198,8 +198,6 @@ public class Sistema {
         }
         return null;
     }
-
-
 
     private void registrarAsistencia() {
         System.out.println("Seleccione la materia:");

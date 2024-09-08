@@ -43,22 +43,15 @@ public class Carrera {
     }
 
     public void mostrarAlumnos() {
-        for (Alumno estudiante : alumnos) {
-            String line = String.format("Carrera: %s - %s, %s", this.getNombre(), estudiante.getApellido(), estudiante.getNombre() );
-            System.out.println(line);
-        }
-    }
-
-
-    public void mostrarAlumnosConEstado() {
+        System.out.println("- " + this.getNombre() + " -");
         for (Alumno alumno : alumnos) {
-            System.out.println("Alumno: " + alumno.getNombre() + " " + alumno.getApellido());
+            String linea = String.format("Alumno: %s, %s", alumno.getApellido(), alumno.getNombre());
+            System.out.println(linea);
             alumno.getSituacionesFinales().forEach((materia, estado) -> {
-                System.out.println("Materia: " + materia.getNombre() + " - Estado: " + estado);
+                System.out.println("Materia: " + materia.getNombre() + "|| Estado: " + estado);
             });
         }
     }
-
 
     public void mostrarMateriasConDetalles() {
         for (Materia materia : materias) {
