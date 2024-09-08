@@ -20,6 +20,7 @@ public class Sistema {
     public void inicializarSistema() {
         Profesor coordinador1 = new Profesor("Juan", "Pérez", "12345678", "Ingeniero en Sistemas");
         Profesor coordinador2 = new Profesor("María", "López", "87654321", "Licenciada en Matemáticas");
+
         Carrera carrera1 = new Carrera("Ingeniería en Sistemas", 5, coordinador1, 5000, 2000);
         Carrera carrera2 = new Carrera("Licenciatura en Matemáticas", 4, coordinador2, 4500, 1800);
 
@@ -33,7 +34,6 @@ public class Sistema {
         materias.add(materia1);
         carrera2.agregarMateria(materia2);
         materias.add(materia2);
-
         carreras.add(carrera1);
         carreras.add(carrera2);
     }
@@ -201,9 +201,11 @@ public class Sistema {
 
     private void registrarAsistencia() {
         System.out.println("Seleccione la materia:");
-        for (int i = 0; i < materias.size(); i++) {
-            System.out.println((i + 1) + ". " + materias.get(i).getNombre());
+        int limit = materias.size();
+        for (int i = 0; i < limit; i++) {
+            System.out.println((i + 1) + ") " + materias.get(i).getNombre());
         }
+
         int materiaIndex = scanner.nextInt() - 1;
         scanner.nextLine();
 
@@ -211,14 +213,16 @@ public class Sistema {
 
         System.out.println("Seleccione el alumno:");
         for (int i = 0; i < materia.getAlumnosInscriptos().size(); i++) {
-            System.out.println((i + 1) + ". " + materia.getAlumnosInscriptos().get(i).getNombre());
+            Alumno actual = materia.getAlumnosInscriptos().get(i);
+            System.out.println((i + 1) + ") " + actual.getApellido() + ", " + actual.getNombre());
         }
+
         int alumnoIndex = scanner.nextInt() - 1;
         scanner.nextLine();
 
         Alumno alumno = materia.getAlumnosInscriptos().get(alumnoIndex);
-
         materia.registrarAsistencia(alumno);
+        System.out.println("Se registró la asistencia del alumno exitosamente");
     }
 
     private void mostrarMateriasDeCarrera() {
@@ -232,10 +236,4 @@ public class Sistema {
         Carrera carrera = carreras.get(carreraIndex);
         carrera.mostrarMateriasConDetalles();
     }
-}
-
-enum EstadoCursado {
-    REGULAR,
-    LIBRE,
-    PROMOCIONADO;
 }

@@ -7,7 +7,7 @@ public class Materia {
     private int curso;
     private String cuatrimestre;
     private Profesor profesor;
-    private ArrayList<Alumno> estudiantes_arr;
+    private ArrayList<Alumno> estudiantesArr;
     private ArrayList<Alumno> asistencia;
 
     public Materia(String nombre, int curso, String cuatrimestre, Profesor profesor) {
@@ -15,7 +15,7 @@ public class Materia {
         this.curso = curso;
         this.cuatrimestre = cuatrimestre;
         this.profesor = profesor;
-        this.estudiantes_arr = new ArrayList<>();
+        this.estudiantesArr = new ArrayList<>();
         this.asistencia = new ArrayList<>();
     }
 
@@ -35,21 +35,21 @@ public class Materia {
         return profesor;
     }
 
-    public ArrayList<Alumno> getEstudiantes_arr() {
-        return estudiantes_arr;
+    public ArrayList<Alumno> getEstudiantesArr() {
+        return estudiantesArr;
     }
 
     //
     public ArrayList<Alumno> getAlumnosInscriptos() {
-        return estudiantes_arr;
+        return estudiantesArr;
     }
 
     public void inscribirEstudiante(Alumno estudiante) {
-        this.estudiantes_arr.add(estudiante);
+        this.estudiantesArr.add(estudiante);
     }
 
     public void mostrarAlumnos() {
-        for (Alumno estudiante : estudiantes_arr) {
+        for (Alumno estudiante : estudiantesArr) {
             String situacion = estudiante.getSituacionesFinales().getOrDefault(this, "Sin cargar");
             String linea = String.format("Alumno: %s, %s || Estado: %s", estudiante.getApellido(), estudiante.getNombre(), situacion);
             System.out.println(linea);
