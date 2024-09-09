@@ -65,12 +65,29 @@ public class Sistema {
     }
 
     private void matricularAlumno() {
-        System.out.println("Nombre del Alumno:");
-        String nombre = scanner.nextLine();
-        System.out.println("Apellido del Alumno:");
-        String apellido = scanner.nextLine();
-        System.out.println("DNI del Alumno:");
-        String dni = scanner.nextLine();
+        
+        while (true) {
+            System.out.println("Nombre del Alumno:");
+            String nombre = scanner.nextLine();
+            if (nombre.matches(".*\\d.*")) {
+                System.err.println("Se ingreso un caracter invalido");
+                continue;
+            }
+            System.out.println("Apellido del Alumno:");
+            String apellido = scanner.nextLine();
+            if (nombre.matches(".*\\d.*")) {
+                System.err.println("Se ingreso un caracter invalido");
+                continue;
+            }
+            System.out.println("DNI del Alumno:");
+            String dni = scanner.nextLine();
+            int dniLength = dni.length();
+            if (7 > dniLength || dniLength > 8) {
+                System.err.println("Se ingresó un DNI no válido");
+                continue;
+            }
+            Utilidades.limpiar_pantalla();
+        }
 
         Random seed = new Random();
         int legajo = seed.nextInt(1000, 9999);
@@ -78,7 +95,7 @@ public class Sistema {
         Alumno alumno = new Alumno(nombre, apellido, dni, legajo);
         System.out.println("Seleccione la Carrera:");
         for (int i = 0; i < carreras.size(); i++) {
-            System.out.println((i + 1) + ". " + carreras.get(i).getNombre());
+            System.out.println((i + 1) + ") " + carreras.get(i).getNombre());
         }
         int carreraIndex = scanner.nextInt() - 1;
         scanner.nextLine();
@@ -100,7 +117,7 @@ public class Sistema {
                     materias.get(i).mostrarAlumnos();
                 }
             }
-            default -> System.out.println("Error, opción invalida");
+            default -> System.out.println("Opción invalida");
         };
     }
 
@@ -126,7 +143,6 @@ public class Sistema {
             }
 
             if (found_arr.size() == 0) {
-                Utilidades.limpiar_pantalla();
                 System.out.println("No se encontro ningun resultado");
                 continue;
             }
@@ -136,7 +152,7 @@ public class Sistema {
 
             if (prsd_input <= 0 || prsd_input > found_arr.size()) {
                 Utilidades.limpiar_pantalla();
-                System.out.println("Error: Ingreso de número inválido");
+                System.out.println("Ingreso de número inválido");
                 continue;
             }
 
@@ -154,11 +170,12 @@ public class Sistema {
 
             if (prsd_input <= 0 || prsd_input > materias_disp.size()) {
                 Utilidades.limpiar_pantalla();
-                System.out.println("Error: Ingreso de número inválido");
+                System.out.println("Ingreso de número inválido");
                 continue;
             }
 
             materias_disp.get(prsd_input - 1).inscribirEstudiante(matriculado);
+            Utilidades.limpiar_pantalla();
             System.out.println("Inscripción a materia exitosa");
         }
     }
@@ -170,18 +187,20 @@ public class Sistema {
         Alumno alumno = buscarAlumnoPorNombre(nombreAlumno);
         if (alumno == null) {
             System.out.println("Alumno no encontrado.");
+            Utilidades.limpiar_pantalla();
             return;
         }
 
         System.out.println("Seleccione la materia:");
         for (int i = 0; i < alumno.getCarrera_actual().getMaterias().size(); i++) {
             Materia materia = alumno.getCarrera_actual().getMaterias().get(i);
-            System.out.println((i + 1) + ". " + materia.getNombre());
+            System.out.println((i + 1) + ") " + materia.getNombre());
         }
         int materiaIndex = scanner.nextInt() - 1;
         scanner.nextLine();
 
         Materia materia = alumno.getCarrera_actual().getMaterias().get(materiaIndex);
+        Utilidades.limpiar_pantalla();
 
         System.out.println("Ingrese el estado final (Regular/Libre/Promocionado):");
         String estado = scanner.nextLine();
@@ -228,7 +247,7 @@ public class Sistema {
     private void mostrarMateriasDeCarrera() {
         System.out.println("Seleccione la carrera:");
         for (int i = 0; i < carreras.size(); i++) {
-            System.out.println((i + 1) + ". " + carreras.get(i).getNombre());
+            System.out.println((i + 1) + ") " + carreras.get(i).getNombre());
         }
         int carreraIndex = scanner.nextInt() - 1;
         scanner.nextLine();
