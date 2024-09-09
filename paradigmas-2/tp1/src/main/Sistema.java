@@ -65,6 +65,7 @@ public class Sistema {
     }
 
     private void matricularAlumno() {
+        String[] datos = new String[3];
         
         while (true) {
             System.out.println("Nombre del Alumno:");
@@ -73,12 +74,14 @@ public class Sistema {
                 System.err.println("Se ingreso un caracter invalido");
                 continue;
             }
+            datos[0] = nombre;
             System.out.println("Apellido del Alumno:");
             String apellido = scanner.nextLine();
             if (nombre.matches(".*\\d.*")) {
                 System.err.println("Se ingreso un caracter invalido");
                 continue;
             }
+            datos[1] = apellido;
             System.out.println("DNI del Alumno:");
             String dni = scanner.nextLine();
             int dniLength = dni.length();
@@ -86,13 +89,15 @@ public class Sistema {
                 System.err.println("Se ingresó un DNI no válido");
                 continue;
             }
+            datos[2] = dni;
             Utilidades.limpiar_pantalla();
+            break;
         }
 
         Random seed = new Random();
         int legajo = seed.nextInt(1000, 9999);
 
-        Alumno alumno = new Alumno(nombre, apellido, dni, legajo);
+        Alumno alumno = new Alumno(datos[0], datos[1], datos[2], legajo);
         System.out.println("Seleccione la Carrera:");
         for (int i = 0; i < carreras.size(); i++) {
             System.out.println((i + 1) + ") " + carreras.get(i).getNombre());
