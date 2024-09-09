@@ -44,6 +44,10 @@ public class Carrera {
 
     public void mostrarAlumnos() {
         System.out.println("- " + this.getNombre() + " -");
+        if (alumnos.size() == 0) {
+            System.err.println("No hay alumnos inscriptos en la carrera");
+            return;
+        }
         for (Alumno alumno : alumnos) {
             String linea = String.format("Alumno: %s, %s", alumno.getApellido(), alumno.getNombre());
             System.out.println(linea);

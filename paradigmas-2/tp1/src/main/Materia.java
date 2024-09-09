@@ -49,6 +49,10 @@ public class Materia {
     }
 
     public void mostrarAlumnos() {
+        if (estudiantesArr.size() == 0) {
+            System.err.println("No hay alumnos inscriptos en la materia");
+            return;
+        }
         for (Alumno estudiante : estudiantesArr) {
             String situacion = estudiante.getSituacionesFinales().getOrDefault(this, "Sin cargar");
             String linea = String.format("Alumno: %s, %s || Estado: %s", estudiante.getApellido(), estudiante.getNombre(), situacion);

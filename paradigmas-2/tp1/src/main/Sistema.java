@@ -119,7 +119,9 @@ public class Sistema {
             }
             case 2 -> {
                 for (int i = 0; i < materias.size(); i++) {
-                    materias.get(i).mostrarAlumnos();
+                    Materia materia = materias.get(i);
+                    System.out.println("- " + materia.getNombre() + " -");
+                    materia.mostrarAlumnos();
                 }
             }
             default -> System.out.println("Opción invalida");
@@ -251,9 +253,11 @@ public class Sistema {
 
     private void mostrarMateriasDeCarrera() {
         System.out.println("Seleccione la carrera:");
+
         for (int i = 0; i < carreras.size(); i++) {
             System.out.println((i + 1) + ") " + carreras.get(i).getNombre());
         }
+
         int carreraIndex = scanner.nextInt() - 1;
         scanner.nextLine();
 
